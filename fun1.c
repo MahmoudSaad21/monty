@@ -1,24 +1,59 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "main.h"
+#include "monty.h"
 
-#define STACK_SIZE 1000
-
-int stack[STACK_SIZE];
-int top = -1;  // Initialize the stack pointer
-
-void push(int value) {
-    if (top == STACK_SIZE - 1) {
-        fprintf(stderr, "Error: Stack overflow\n");
-        exit(EXIT_FAILURE);
-    }
-
-    stack[++top] = value;
+/**
+*create_node - Creates a node.
+*@n: Number to go inside the node.
+*Return: Upon sucess a pointer to the node. Otherwise NULL.
+*/
+stack_t *create(int n)
+{
+stack_t *node;
+node = malloc(sizeof(stack_t));
+if (node == NULL)
+err(4);
+node->next = NULL;
+node->prev = NULL;
+node->n = n;
+return (node);
 }
 
-void pall() {
-    int i;
-    for (i = top; i >= 0; i--) {
-        printf("%d\n", stack[i]);
-    }
+/**
+* free_nodes - Frees nodes in the stack.
+*/
+void free_nodes(void)
+{
+stack_t *tmp;
+if (head == NULL)
+return;
+while (head != NULL)
+{
+tmp = head;
+head = head->next;
+free(tmp);
+}
+}
+
+
+/**
+* push_to_queue - Adds a node to the queue.
+* @new_node: Pointer to the new node.
+* @ln: line number of the opcode.
+*/
+void push_to_queue(stack_t **new_node, __attribute__((unused))unsigned int ln)
+{
+stack_t *tmp;
+if (new_node == NULL || *new_node == NULL)
+exit(EXIT_FAILURE);
+if (head == NULL)
+{
+head = *new_node;
+return;
+}
+tmp = head;
+while (tmp->next != NULL)
+tmp = tmp->next;
+tmp->next = *new_node;
+(*new_node)->prev = tmp;
 }
